@@ -151,4 +151,4 @@ This project was built with **Cursor IDE** using the **Claude** AI agent as the 
 
 ## License
 
-MIT
+
