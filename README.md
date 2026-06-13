@@ -8,7 +8,7 @@ A full-stack expense-sharing application inspired by Splitwise. Split bills with
 
 ## Features
 
-- **Authentication** — Register and login with email/password
+- **Authentication** — Register and login with email/password.
 - **Groups** — Create groups, invite via link, add/remove members
 - **Expenses** — Split equally, unequally (exact amounts), by percentage, or by shares
 - **Balances** — Per-group balances, simplified debts, and cross-group summary
