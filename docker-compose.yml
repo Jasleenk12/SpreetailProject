@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: splitwise_db
+    environment:
+      POSTGRES_USER: splitwise
+      POSTGRES_PASSWORD: splitwise
+      POSTGRES_DB: splitwise_clone
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

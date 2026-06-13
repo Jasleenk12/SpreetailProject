@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  groupMemberships GroupMember[]
+  expensesPaid     Expense[]         @relation("PaidBy")
+  expenseSplits    ExpenseSplit[]
+  messages         ExpenseMessage[]
+  settlementsPaid  Settlement[]      @relation("SettlementPayer")
+  settlementsReceived Settlement[]   @relation("SettlementReceiver")
+  groupsCreated    Group[]           @relation("GroupCreator")
+}
+
+model Group {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  inviteCode  String   @unique @default(cuid())
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  createdBy   User         @relation("GroupCreator", fields: [createdById], references: [id])
+  members     GroupMember[]
+  expenses    Expense[]
+  settlements Settlement[]
+}
+
+model GroupMember {
+  id       String   @id @default(cuid())
+  groupId  String
+  userId   String
+  role     String   @default("member") // admin | member
+  joinedAt DateTime @default(now())
+
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+}
+
+model Expense {
+  id          String    @id @default(cuid())
+  groupId     String
+  paidById    String
+  description String
+  amount      Decimal
+  splitType   String    @default("EQUAL") // EQUAL | EXACT | PERCENTAGE | SHARES
+  expenseDate DateTime  @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  group    Group            @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  paidBy   User             @relation("PaidBy", fields: [paidById], references: [id])
+  splits   ExpenseSplit[]
+  messages ExpenseMessage[]
+}
+
+model ExpenseSplit {
+  id         String  @id @default(cuid())
+  expenseId  String
+  userId     String
+  amount     Decimal
+  percentage Decimal?
+  shares     Int?
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
+
+  @@unique([expenseId, userId])
+}
+
+model ExpenseMessage {
+  id        String   @id @default(cuid())
+  expenseId String
+  userId    String
+  content   String
+  createdAt DateTime @default(now())
+
+  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id])
+}
+
+model Settlement {
+  id         String   @id @default(cuid())
+  groupId    String
+  payerId    String
+  receiverId String
+  amount     Decimal
+  note       String?
+  settledAt  DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  group    Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  payer    User  @relation("SettlementPayer", fields: [payerId], references: [id])
+  receiver User  @relation("SettlementReceiver", fields: [receiverId], references: [id])
+}
