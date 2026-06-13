@@ -145,9 +145,24 @@ prisma/
 | GET/POST | `/api/expenses/:id/messages` | Expense chat |
 | POST | `/api/groups/:id/settlements` | Record payment |
 
-## AI Used
+## Assignment Deliverables
 
-This project was built with **Cursor IDE** using the **Claude** AI agent as the primary development collaborator. See `AI_CONTEXT.md` for full product context, architecture decisions, and prompts. See `BUILD_PLAN.md` for the build summary.
+| File | Description |
+|------|-------------|
+| `README.md` | Setup and deployment instructions |
+| `BUILD_PLAN.md` | Product research, architecture, tradeoffs |
+| `AI_CONTEXT.md` | Full rebuild context for AI/human evaluators |
+| `PROMPTS.md` | Key prompts used during development |
+| `SCOPE.md` | Product scope, CSV anomaly log, database schema |
+| `DECISIONS.md` | Engineering decision log with options and reasoning |
+| `AI_USAGE.md` | AI tools, prompts, and error corrections |
+| `IMPORT_REPORT.md` | Sample CSV import report (also generated live in app) |
+| `data/sample-expenses.csv` | Sample CSV with intentional data anomalies |
+
+### CSV Import
+
+Upload a CSV from any group page via **Import CSV**. The app validates each row, skips/fixes anomalies, and displays an import report. See `SCOPE.md` for the anomaly log and `IMPORT_REPORT.md` for a sample output.
+
 
 ## License
 

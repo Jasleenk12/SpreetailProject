@@ -1,0 +1,11 @@
+description,amount,paid_by_email,split_type,expense_date,participants,participant_values
+Groceries,90,alice@example.com,EQUAL,2026-06-01,alice@example.com;bob@example.com;charlie@example.com,
+Electricity Bill,120,bob@example.com,PERCENTAGE,2026-06-05,alice@example.com;bob@example.com;charlie@example.com,40;30;30
+Dinner,45.50,charlie@example.com,EQUAL,2026-06-08,alice@example.com;bob@example.com,
+Internet,-30,alice@example.com,EQUAL,2026-06-10,alice@example.com;bob@example.com,
+,50,bob@example.com,EQUAL,2026-06-11,alice@example.com;bob@example.com,
+Rent,1500,unknown@example.com,EQUAL,2026-06-01,alice@example.com;bob@example.com,
+Pizza,60,alice@example.com,PERCENTAGE,2026-06-12,alice@example.com;bob@example.com;charlie@example.com,50;30;10
+Cleaning supplies,25.99,bob@example.com,EXACT,not-a-date,alice@example.com;bob@example.com,15.00;10.99
+Water bill,N/A,charlie@example.com,EQUAL,2026-06-15,alice@example.com;bob@example.com,
+Movie tickets,36,alice@example.com,SHARES,2026-06-14,alice@example.com;bob@example.com;charlie@example.com,2;1;1

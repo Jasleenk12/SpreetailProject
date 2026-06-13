@@ -10,6 +10,7 @@ import {
   Trash2,
   UserPlus,
   DollarSign,
+  Upload,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { formatCurrency, formatDate, getInitials } from "@/lib/utils";
@@ -72,6 +73,8 @@ export default function GroupPage() {
   const [memberEmail, setMemberEmail] = useState("");
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
+  const [importReport, setImportReport] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
 
   const loadGroup = useCallback(async () => {
     const res = await fetch(`/api/groups/${id}`);
@@ -130,6 +133,25 @@ export default function GroupPage() {
     loadGroup();
   };
 
+  const handleCsvImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setImporting(true);
+    setImportReport(null);
+    const formData = new FormData();
+    formData.append("file", file);
+    const res = await fetch(`/api/groups/${id}/import`, { method: "POST", body: formData });
+    const data = await res.json();
+    setImporting(false);
+    if (res.ok) {
+      setImportReport(data.report);
+      loadGroup();
+    } else {
+      setImportReport(`Import failed: ${data.error}`);
+    }
+    e.target.value = "";
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -185,6 +207,11 @@ export default function GroupPage() {
             <div className="flex justify-between items-center mb-4">
               <h2 className="font-semibold text-slate-900">Expenses</h2>
               <div className="flex gap-2">
+                <label className="flex items-center gap-1.5 px-3 py-2 text-sm border rounded-lg hover:bg-white cursor-pointer">
+                  <Upload size={14} />
+                  {importing ? "Importing..." : "Import CSV"}
+                  <input type="file" accept=".csv" onChange={handleCsvImport} className="hidden" disabled={importing} />
+                </label>
                 <button
                   onClick={() => setShowSettleUp(true)}
                   className="flex items-center gap-1.5 px-3 py-2 text-sm border rounded-lg hover:bg-white"
@@ -247,6 +274,15 @@ export default function GroupPage() {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {importReport && (
+              <div className="mt-4 bg-slate-50 border border-slate-200 rounded-xl p-4">
+                <h3 className="font-medium text-slate-900 mb-2">Import Report</h3>
+                <pre className="text-xs text-slate-600 whitespace-pre-wrap overflow-x-auto max-h-64 overflow-y-auto">
+                  {importReport}
+                </pre>
               </div>
             )}
 
